@@ -11,7 +11,8 @@ namespace ds3d { namespace impl { namespace render {
 
 struct Config {
     config::ComponentConfig compConfig;
-    std::string inputDatamapKey;
+    std::string inputRadarmapKey;
+    std::string inputExtKey;
 
 };
 
@@ -23,8 +24,12 @@ inline ErrCode parseConfig(const std::string& content, const std::string& path, 
     YAML::Node node = YAML::Load(config.compConfig.configBody);
 
     // parse config parameters here
-    if (node["input_datamap_key"]) {
-        config.inputDatamapKey = node["input_datamap_key"].as<std::string>();
+    if (node["input_radarmap_key"]) {
+        config.inputRadarmapKey = node["input_radarmap_key"].as<std::string>();
+    }
+
+    if (node["input_extrinsic_key"]) {
+        config.inputExtKey = node["input_extrinsic_key"].as<std::string>();
     }
 
     

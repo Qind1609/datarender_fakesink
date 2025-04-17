@@ -39,14 +39,23 @@ ErrCode FakeSink::renderImpl(GuardDataMap datamap, OnGuardDataCBImpl dataDoneCb)
     DS_ASSERT(datamap);
 
     printf("FakeSink received Data\n");
-    DS3D_FAILED_RETURN(datamap.hasData(_config.inputDatamapKey), ErrCode::kConfig,
+    DS3D_FAILED_RETURN(datamap.hasData(_config.inputRadarmapKey), ErrCode::kConfig,
         "No radar frame found in datamap");
+
+    DS3D_FAILED_RETURN(datamap.hasData(_config.inputExtKey), ErrCode::kConfig,
+        "No extrinsic frame found in datamap");
 
     FrameGuard radarFrame;
     
     DS3D_ERROR_RETURN(
-            datamap.getGuardData(_config.inputDatamapKey, radarFrame),
+            datamap.getGuardData(_config.inputRadarmapKey, radarFrame),
             "No radar frame found in datamap from render");
+
+
+    FrameGuard extFrame;
+    DS3D_ERROR_RETURN(
+            datamap.getGuardData(_config.inputExtKey, extFrame),
+            "No extrinsic frame found in datamap from render");
 
     // further process the radar frame here
     // uint32_t _pointSizeBytes = 4*dataTypeBytes( DataType::kFp32);
@@ -69,7 +78,7 @@ ErrCode FakeSink::renderImpl(GuardDataMap datamap, OnGuardDataCBImpl dataDoneCb)
     dataDoneCb(ErrCode::kGood, datamap);
 
     // must invoke this clear() function to release the datamap for all previous elements
-    datamap.clear();
+    //datamap.clear();
     
     return ErrCode::kGood;
 }
